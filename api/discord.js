@@ -10,23 +10,23 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const redirect = encodeURIComponent('http://localhost:8080/api/discord/callback');
 
 router.get('/login', (req, res) => {
-    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=692452667183726684&redirect_uri=${redirect}&response_type=code&scope=identify%20guilds`);
+    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirect}&response_type=code&scope=identify%20guilds`);
 });
 
 router.get('/callback', catchAsync(async (req, res) => {
     const code = req.query.code;
     if (!code) throw new Error('NO_CODE');
 
-    const creds = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
-    const response = await (await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`,
+    const credentials = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
+    const response = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`,
         {
             method: 'POST',
             headers: {
-                Authorization: `Basic ${creds}`,
+                Authorization: `Basic ${credentials}`,
             },
-        }));
-    const cred = await response.json();
-    res.redirect(`/api/discord/get?token=${cred.access_token}`);
+        });
+    const token = (await response.json()).access_token;
+    res.redirect(`/api/discord/get?token=${token}`);
 }));
 
 
@@ -52,6 +52,7 @@ router.get('/get', catchAsync(async (req, res) => {
 
     console.log(user);
     console.log(guild);
+    res.redirect(`/dashboard`);
 }))
 
 module.exports = router;
