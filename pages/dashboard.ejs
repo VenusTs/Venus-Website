@@ -7,7 +7,17 @@
 
 <body>
     <h1>Guilds</h1>
-    <p><%= guilds.map(g => g.name).join(' - ') %></p>
+    <form id="tableForm" action="../dashboard" method="post">
+        <select class="guildPicker" data-style="btn-info" name="guildPicker">
+            <optgroup label="Select Guild">
+                <option value="">Select Server</option>
+                <% guilds.forEach(function(guild){ %>
+                <option value="<%= guild.id %>"><%= guild.name %></option>
+                <% }) %>
+            </optgroup>
+        </select>
+        <input type="submit" value="Submit" />
+    </form>
 </body>
 
 </html>

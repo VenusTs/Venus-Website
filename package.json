@@ -19,7 +19,8 @@
     },
     "keywords": [],
     "scripts": {
-        "start": "tsc && node ."
+        "start": "tsc && node .",
+        "push": "git add . && git commit -m 'epico' && git push"
     },
     "author": "Ven",
     "license": "MIT",

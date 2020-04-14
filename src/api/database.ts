@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-mongoose.connect(process.env.mongoString!, {
+mongoose.connect(process.env.MONGO_STRING!, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useFindAndModify: false,
@@ -55,8 +55,6 @@ const GuildSchema = new mongoose.Schema({
 
 const guilds = mongoose.model('guilds', GuildSchema);
 
-module.exports = guilds;
-
-module.exports.getGuild = async (guildId: string) => {
+export const getGuild = async (guildId: string) => {
     return (await guilds.findOne({ guild: guildId })) || (await guilds.create({ guild: guildId }));
 };

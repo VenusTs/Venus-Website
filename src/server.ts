@@ -1,6 +1,8 @@
-import express, { Response, Request, NextFunction } from 'express';
-import path from 'path';
 require('dotenv').config();
+import express, { Response, Request, NextFunction } from 'express';
+import bodyParser from 'body-parser';
+import path from 'path';
+import { getGuild } from './api/database';
 
 const app = express();
 
@@ -10,8 +12,15 @@ app.get('/', (_req, res) => {
     res.render(path.join(__dirname, '../index.ejs'), { title: 'VenusTS' });
 });
 
-app.get('/dashboard', (_req, res) => {
-    res.status(200).sendFile(path.join(__dirname, '../pages/dashboard.html'));
+app.use(
+    bodyParser.urlencoded({
+        extended: true
+    })
+);
+
+app.post('/dashboard', async (req, res) => {
+    const guild = await getGuild(req.body.guildPicker);
+    res.send(guild);
 });
 
 app.listen(8080, () => {
