@@ -4,6 +4,7 @@ import fetch from 'node-fetch';
 import btoa from 'btoa';
 import { catchAsyncErrors } from '../util/handlers';
 import { filterGuilds } from '../util/handlers';
+import { getGuild } from './database';
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const redirect = encodeURIComponent('http://localhost:8080/api/callback');
 
-let managedGuilds: {};
+let managedGuilds: { [key: string]: any }[];
 
 router.get('/login', (_req, res) => {
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirect}&response_type=code&scope=identify%20guilds`);
@@ -56,7 +57,8 @@ router.get(
             }
         });
         const guilds = await guildResponse.json();
-        managedGuilds = (await filterGuilds(guilds)).map((guild: { [key: string]: string }) => {
+
+        managedGuilds = filterGuilds(guilds).map((guild: { [key: string]: string }) => {
             return {
                 id: guild.id,
                 name: guild.name,
@@ -64,14 +66,16 @@ router.get(
             };
         });
 
-        res.redirect('/api/dashboard');
+        await Promise.all(managedGuilds.map(async guild => (guild.settings = await getGuild(guild.id!))));
+
+        res.redirect('/api/server-overview');
     })
 );
 
 router.get(
-    '/dashboard',
+    '/server-overview',
     catchAsyncErrors(async (_req: Request, res: Response) => {
-        res.render(path.join(__dirname, '../../pages/dashboard.ejs'), { guilds: managedGuilds });
+        res.render(path.join(__dirname, '../../pages/dashboard.ejs'), { guilds: managedGuilds.filter(guild => guild.settings) });
     })
 );
 

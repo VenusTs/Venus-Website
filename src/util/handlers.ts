@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import { getGuild } from '../api/database';
 
 const { Permissions } = require('discord.js');
 
-export const filterGuilds = async (guilds: { [key: string]: string }[]) => {
-    return await asyncFilter(guilds, async (guild: { [key: string]: string }) => {
+export const filterGuilds = (guilds: { [key: string]: string }[]) => {
+    return guilds.filter(guild => {
         const permissions = new Permissions(guild.permissions);
-        return permissions.has('MANAGE_GUILD') && (await getGuild(guild.id));
+        return permissions.has('MANAGE_GUILD');
     });
 };
 
@@ -16,5 +15,3 @@ export const catchAsyncErrors = (fn: CallableFunction) => (req: Request, res: Re
         routePromise.catch((err: Error) => next(err));
     }
 };
-
-const asyncFilter = async (arr: any, predicate: any) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v: any, index: any) => results[index]));

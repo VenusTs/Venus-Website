@@ -12,7 +12,7 @@
             <optgroup label="Select Guild">
                 <option value="">Select Server</option>
                 <% guilds.forEach(function(guild){ %>
-                <option value="<%= guild.id %>"><%= guild.name %></option>
+                <option value="<%= guild.settings %>"><%= guild.name %></option>
                 <% }) %>
             </optgroup>
         </select>

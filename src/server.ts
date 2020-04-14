@@ -19,8 +19,7 @@ app.use(
 );
 
 app.post('/dashboard', async (req, res) => {
-    const guild = await getGuild(req.body.guildPicker);
-    res.send(guild);
+    res.send(req.body.guildPicker);
 });
 
 app.listen(8080, () => {
@@ -28,7 +27,7 @@ app.listen(8080, () => {
 });
 
 // Routes
-app.use('/api', require('./api/discord'));
+app.use('/api', require('./api/oauth2'));
 
 // ERRORS
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
