@@ -1,9 +1,9 @@
-const express = require('express');
-const path = require('path');
-const fetch = require('node-fetch');
-const btoa = require('btoa');
-const { catchAsync } = require('../util/Util');
-const { filterGuilds } = require('../util/handlers.js');
+import express, { Request, Response } from 'express';
+import path from 'path';
+import fetch from 'node-fetch';
+import btoa from 'btoa';
+import { catchAsyncErrors } from '../util/handlers';
+import { filterGuilds } from '../util/handlers';
 
 const router = express.Router();
 
@@ -11,15 +11,15 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const redirect = encodeURIComponent('http://localhost:8080/api/callback');
 
-let managedGuilds;
+let managedGuilds: {};
 
-router.get('/login', (req, res) => {
+router.get('/login', (_req, res) => {
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirect}&response_type=code&scope=identify%20guilds`);
 });
 
 router.get(
     '/callback',
-    catchAsync(async (req, res) => {
+    catchAsyncErrors(async (req: Request, res: Response) => {
         const code = req.query.code;
         if (!code) throw new Error('NO_CODE');
 
@@ -37,7 +37,7 @@ router.get(
 
 router.get(
     '/get',
-    catchAsync(async (req, res) => {
+    catchAsyncErrors(async (req: Request, res: Response) => {
         const token = req.query.token;
         if (!token) throw new Error('NO_TOKEN');
 
@@ -70,8 +70,8 @@ router.get(
 
 router.get(
     '/dashboard',
-    catchAsync(async (req, res) => {
-        res.render(path.join(__dirname, '../pages/dashboard.ejs'), { guilds: managedGuilds });
+    catchAsyncErrors(async (_req: Request, res: Response) => {
+        res.render(path.join(__dirname, '../../pages/dashboard.ejs'), { guilds: managedGuilds });
     })
 );
 

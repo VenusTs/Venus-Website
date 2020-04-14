@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-mongoose.connect(process.env.mongoString, {
+mongoose.connect(process.env.mongoString!, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useFindAndModify: false,
@@ -8,9 +8,9 @@ mongoose.connect(process.env.mongoString, {
 });
 const db = mongoose.connection;
 
-db.on('error', err => logError(err));
+db.on('error', err => console.error(err));
 
-db.once('open', () => logInfo(`Connected to MongoDB Atlas at ${db.name}!`));
+db.once('open', () => console.log(`Connected to MongoDB Atlas at ${db.name}!`));
 
 const GuildSchema = new mongoose.Schema({
     guild: String,
@@ -57,6 +57,6 @@ const guilds = mongoose.model('guilds', GuildSchema);
 
 module.exports = guilds;
 
-module.exports.getGuild = async guildId => {
-    return (await this.findOne({ guild: guildId })) || (await this.create({ guild: guildId }));
+module.exports.getGuild = async (guildId: string) => {
+    return (await guilds.findOne({ guild: guildId })) || (await guilds.create({ guild: guildId }));
 };
