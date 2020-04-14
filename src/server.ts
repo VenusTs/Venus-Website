@@ -18,8 +18,12 @@ app.use(
     })
 );
 
+app.post('/save', async (req, _res) => {
+    const nsfw = req.body.nsfwToggle;
+    console.log(nsfw);
+});
 app.post('/dashboard', async (req, res) => {
-    res.send(req.body.guildPicker);
+    res.render(path.join(__dirname, '../pages/settings.ejs'), { settings: JSON.parse(req.body.guildPicker) });
 });
 
 app.listen(8080, () => {
@@ -28,6 +32,7 @@ app.listen(8080, () => {
 
 // Routes
 app.use('/api', require('./api/oauth2'));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // ERRORS
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {

@@ -1,0 +1,21 @@
+<!Doctype html>
+<html>
+
+<head>
+    <title>Venus Dashboard</title>
+    <link rel='stylesheet' type="text/css" href='/styles/style.css' />
+</head>
+
+<body>
+    <h1>Guilds</h1>
+    <p>Prefix: <%= settings.settings.prefix %></p>
+    <!-- Rounded switch -->
+    <label class="switch">
+        NSFW: <input type="checkbox"
+            onclick="settings.settings.nsfw ? settings.settings.nsfw = false : settings.settings.nsfw = true"
+            id="nsfwToggle">
+        <span class="slider round"></span>
+    </label>
+</body>
+
+</html>

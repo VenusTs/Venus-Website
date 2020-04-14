@@ -66,7 +66,7 @@ router.get(
             };
         });
 
-        await Promise.all(managedGuilds.map(async guild => (guild.settings = await getGuild(guild.id!))));
+        await Promise.all(managedGuilds.map(async guild => (guild.settings = JSON.stringify(await getGuild(guild.id!)))));
 
         res.redirect('/api/server-overview');
     })
