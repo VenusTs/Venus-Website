@@ -56,7 +56,7 @@ router.get(
             }
         });
         const guilds = await guildResponse.json();
-        managedGuilds = filterGuilds(guilds).map(guild => {
+        managedGuilds = (await filterGuilds(guilds)).map((guild: { [key: string]: string }) => {
             return {
                 id: guild.id,
                 name: guild.name,

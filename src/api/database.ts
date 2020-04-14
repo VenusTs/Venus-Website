@@ -56,5 +56,5 @@ const GuildSchema = new mongoose.Schema({
 const guilds = mongoose.model('guilds', GuildSchema);
 
 export const getGuild = async (guildId: string) => {
-    return (await guilds.findOne({ guild: guildId })) || (await guilds.create({ guild: guildId }));
+    return await guilds.findOne({ guild: guildId });
 };
